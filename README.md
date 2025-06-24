@@ -120,3 +120,6 @@ Here is an example of a request to the proxy when using the DM API:
 ```
 
 Replace the `url` with your endpoint URL, `VF.DM.XXX` with your Voiceflow API key, set `versionid` to your project version ('development', 'production') and pass the `userid` you want.
+
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=voiceflow-community_vf-analytics-proxy&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=voiceflow-community_vf-analytics-proxy)
