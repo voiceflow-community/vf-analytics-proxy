@@ -19,6 +19,12 @@ app.use((req, res, next) => {
   next()
 })
 
+// Validate userID to prevent SSRF
+function validateUserID(userID) {
+  // Only allow alphanumeric, underscore, hyphen, max length 64
+  return typeof userID === 'string' && /^[a-zA-Z0-9_-]{1,64}$/.test(userID)
+}
+
 // Function to forward requests and log responses
 const forwardRequest = async (req, res) => {
   let targetUrl = `${VOICEFLOW_RUNTIME_URL}${req.originalUrl}`
@@ -34,7 +40,10 @@ const forwardRequest = async (req, res) => {
 
     delete headers['content-length']
     if (MODE == 'api') {
-      let userID = req.headers.userid || 'user'
+      let userID = validateUserID(req.headers.userid) ? req.headers.userid : null
+      if (!userID) {
+        return res.status(400).send('Invalid userID')
+      }
       headers.authorization = process.env.VOICEFLOW_API_KEY
       targetUrl = `${VOICEFLOW_RUNTIME_URL}/state/user/${userID}/interact`
     }
